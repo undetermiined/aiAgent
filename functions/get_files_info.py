@@ -1,4 +1,4 @@
-# Allows aiAgent to view and list directory contents and metadata
+# Allows aiAgent to view and list directory contents and metadata.
 
 import os
 
@@ -18,8 +18,14 @@ def get_files_info(working_directory, directory="."):
     else:
         return f'Error: "{directory}" is not a directory'
 
+    file_info = []
     try:
         for current_obj in os.listdir(target_dir):
-            return f"{current_obj}: {os.path.getsize(current_obj)} {os.path.isdir}"
+            full_path = os.path.join(target_dir, current_obj)
+            file_info.append(
+                f"   - {current_obj}: {os.path.getsize(full_path)}, is_dir={os.path.isdir(full_path)}"
+            )
+        result = "\n".join(file_info)
+        return result
     except Exception as e:
         return f"Error occured: {e}"
