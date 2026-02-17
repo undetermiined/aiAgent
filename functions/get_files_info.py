@@ -4,22 +4,19 @@ import os
 
 
 def get_files_info(working_directory, directory="."):
-    working_dir_abs = os.path.abspath(working_directory)
-    target_dir = os.path.normpath(os.path.join(working_dir_abs, directory))
-    valid_target_dir = (
-        os.path.commonpath([working_dir_abs, target_dir]) == working_dir_abs
-    )
-
-    if valid_target_dir is False:
-        return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
-
-    if os.path.isdir(target_dir):
-        pass
-    else:
-        return f'Error: "{directory}" is not a directory'
-
-    file_info = []
     try:
+        working_dir_abs = os.path.abspath(working_directory)
+        target_dir = os.path.normpath(os.path.join(working_dir_abs, directory))
+        valid_target_dir = (
+            os.path.commonpath([working_dir_abs, target_dir]) == working_dir_abs
+        )
+
+        if valid_target_dir is False:
+            return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
+        if not os.path.isdir(target_dir):
+            return f'Error: "{directory}" is not a directory'
+
+        file_info = []
         for current_obj in os.listdir(target_dir):
             full_path = os.path.join(target_dir, current_obj)
             file_info.append(
@@ -27,5 +24,6 @@ def get_files_info(working_directory, directory="."):
             )
         result = "\n".join(file_info)
         return result
+
     except Exception as e:
-        return f"Error: {e}"
+        return f'Error reading directory: "{directory}" {e}'
